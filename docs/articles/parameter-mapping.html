@@ -81,11 +81,11 @@ Brazil’s National Treasury. Because the API is natively in Portuguese,
 the package offers two parallel interfaces:</p>
 <ul>
 <li>
-<strong>English interface</strong> – English function names
+<strong>English interface</strong>: English function names
 <em>and</em> English parameter names (e.g.,
 <code>get_budget_report(fiscal_year = 2023)</code>)</li>
 <li>
-<strong>Portuguese interface</strong> – names matching the original
+<strong>Portuguese interface</strong>: names matching the original
 API query parameters (e.g.,
 <code>get_rreo(an_exercicio = 2023)</code>)</li>
 </ul>
@@ -244,7 +244,7 @@ report appendices.</p>
 <span></span>
 <span><span class="co"># What appendices exist for the municipal RREO?</span></span>
 <span><span class="fu"><a href="../reference/get_anexos.html">get_annexes</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">esfera</span> <span class="op">==</span> <span class="st">"M"</span>, <span class="va">demonstrativo</span> <span class="op">==</span> <span class="st">"RREO"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">esfera</span> <span class="op">==</span> <span class="st">"M"</span>, <span class="fu">str_detect</span><span class="op">(</span><span class="va">anexo</span>, <span class="st">"RREO"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 <div class="section level3">
@@ -358,7 +358,7 @@ them:</p>
 <span></span>
 <span><span class="co"># Which RREO periods did Pernambuco deliver in 2023?</span></span>
 <span><span class="fu"><a href="../reference/get_delivery_status.html">get_delivery_status</a></span><span class="op">(</span>entity_id <span class="op">=</span> <span class="fl">26</span>, year <span class="op">=</span> <span class="fl">2023</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">entregavel</span> <span class="op">==</span> <span class="st">"RREO"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">entregavel</span> <span class="op">==</span> <span class="st">"Relatório de Gestão Fiscal"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">periodo</span>, <span class="va">status_relatorio</span>, <span class="va">data_status</span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
@@ -468,7 +468,7 @@ under 50k)</li>
 <span>  report_type <span class="op">=</span> <span class="st">"RREO Simplificado"</span>,</span>
 <span>  appendix    <span class="op">=</span> <span class="st">"RREO-Anexo 01"</span>,</span>
 <span>  sphere      <span class="op">=</span> <span class="st">"M"</span>,</span>
-<span>  entity_id   <span class="op">=</span> <span class="fl">2611606</span></span>
+<span>  entity_id   <span class="op">=</span> <span class="fl">2600104</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><strong>Key response columns:</strong> <code>exercicio</code>,
 <code>demonstrativo</code>, <code>periodo</code>,

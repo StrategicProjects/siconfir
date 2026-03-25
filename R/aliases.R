@@ -108,7 +108,7 @@ get_delivery_status <- function(entity_id, year, use_cache = TRUE) {
 #'   `an_exercicio`.
 #' @param period Integer. Bimester number (1--6). Maps to `nr_periodo`.
 #' @param report_type Character. `"RREO"` or `"RREO Simplificado"`. Maps
-#'   to `co_tipo_demonstrativo`.
+#'   to `co_tipo_demonstrativo`. Note: `"RREO Simplificado"` applies only to municipalities with fewer than 50,000 inhabitants that opted for simplified reporting.
 #' @param appendix Character. Appendix name (e.g., `"RREO-Anexo 01"`).
 #'   Maps to `no_anexo`.
 #' @param sphere Character. Government sphere: `"M"` (municipalities),

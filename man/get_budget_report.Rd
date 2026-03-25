@@ -21,7 +21,7 @@ get_budget_report(
 \item{period}{Integer. Bimester number (1--6). Maps to \code{nr_periodo}.}
 
 \item{report_type}{Character. \code{"RREO"} or \code{"RREO Simplificado"}. Maps
-to \code{co_tipo_demonstrativo}.}
+to \code{co_tipo_demonstrativo}. Note: \code{"RREO Simplificado"} applies only to municipalities with fewer than 50,000 inhabitants that opted for simplified reporting.}
 
 \item{appendix}{Character. Appendix name (e.g., \code{"RREO-Anexo 01"}).
 Maps to \code{no_anexo}.}

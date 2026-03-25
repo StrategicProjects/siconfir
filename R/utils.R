@@ -82,7 +82,19 @@ siconfir_clear_cache <- function() {
 
 # -- Request builder -----------------------------------------------------------
 
+#' Maximum number of retries for transient connection errors
+#' @noRd
+max_retries <- 3L
+
+#' Pause between retries (seconds)
+#' @noRd
+retry_wait <- 2L
+
 #' Build and perform a single request to the SICONFI API
+#'
+#' Wraps `httr2::req_perform()` with user-friendly error handling for
+#' connection failures, HTTP errors, and JSON parsing issues. Retries
+#' transient connection errors up to `max_retries` times.
 #'
 #' @param endpoint Character. Path appended to the base URL (e.g., "/entes").
 #' @param params Named list of query parameters (NULLs are dropped).
@@ -92,7 +104,6 @@ siconfir_clear_cache <- function() {
 #' @noRd
 siconfi_request <- function(endpoint, params = list(), use_cache = TRUE) {
   # Drop NULL params
-
   params <- Filter(Negate(is.null), params)
 
   url <- paste0(base_url(), endpoint)
@@ -110,21 +121,99 @@ siconfi_request <- function(endpoint, params = list(), use_cache = TRUE) {
   req <- httr2::request(url) |>
     httr2::req_url_query(!!!params) |>
     httr2::req_headers(Accept = "application/json") |>
-    httr2::req_retry(max_tries = 3, backoff = ~ 2) |>
     httr2::req_error(is_error = function(resp) FALSE)
 
-  resp <- httr2::req_perform(req)
+  # Retry loop with friendly error messages
+  resp <- NULL
+  last_error <- NULL
 
+  for (attempt in seq_len(max_retries)) {
+    last_error <- NULL
+
+    resp <- tryCatch(
+      httr2::req_perform(req),
+      error = function(e) {
+        last_error <<- e
+        NULL
+      }
+    )
+
+    if (!is.null(resp)) break
+
+    if (attempt < max_retries) {
+      wait <- retry_wait * attempt
+      cli::cli_alert_warning(
+        paste0(
+          "Connection failed (attempt {attempt}/{max_retries}). ",
+          "Retrying in {wait}s..."
+        )
+      )
+      Sys.sleep(wait)
+    }
+  }
+
+  # All retries exhausted
+
+  if (is.null(resp)) {
+    err_msg <- conditionMessage(last_error)
+
+    # Classify the error for a friendlier message
+    hint <- if (grepl("HTTP/2|stream|PROTOCOL_ERROR", err_msg)) {
+      "The server closed the connection unexpectedly (HTTP/2 protocol error)."
+    } else if (grepl("resolve|DNS|getaddrinfo", err_msg, ignore.case = TRUE)) {
+      "Could not resolve the API hostname. Check your internet connection."
+    } else if (grepl("timed? ?out|timeout", err_msg, ignore.case = TRUE)) {
+      "The request timed out. The API may be temporarily unavailable."
+    } else if (grepl("connection refused|connrefused", err_msg,
+                      ignore.case = TRUE)) {
+      "Connection refused by the server."
+    } else if (grepl("SSL|certificate|TLS", err_msg, ignore.case = TRUE)) {
+      "SSL/TLS error. There may be a network or certificate issue."
+    } else {
+      NULL
+    }
+
+    bullets <- c(
+      "x" = "Failed to connect to the SICONFI API after {max_retries} attempts.",
+      "i" = "Endpoint: {.field {endpoint}}",
+      if (!is.null(hint)) c("!" = hint),
+      "i" = "Original error: {err_msg}",
+      "i" = "Try again later or check your internet connection."
+    )
+
+    cli::cli_abort(bullets, call = NULL)
+  }
+
+  # Check HTTP status
   status <- httr2::resp_status(resp)
   if (status != 200L) {
     cli::cli_abort(c(
-      "SICONFI API returned status {status}.",
-      "i" = "Endpoint: {.url {endpoint}}",
-      "i" = "Check your parameters."
-    ))
+      "x" = "SICONFI API returned HTTP status {.val {status}}.",
+      "i" = "Endpoint: {.field {endpoint}}",
+      "i" = if (status == 404L) {
+        "The endpoint or entity was not found. Check your parameters."
+      } else if (status >= 500L) {
+        "Server error. The API may be temporarily unavailable."
+      } else if (status == 429L) {
+        "Rate limited. Wait a moment before retrying."
+      } else {
+        "Check your parameters and try again."
+      }
+    ), call = NULL)
   }
 
-  body <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  # Parse JSON
+  body <- tryCatch(
+    httr2::resp_body_json(resp, simplifyVector = TRUE),
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to parse the API response as JSON.",
+        "i" = "Endpoint: {.field {endpoint}}",
+        "i" = "The API may have returned an unexpected format.",
+        "i" = "Original error: {conditionMessage(e)}"
+      ), call = NULL)
+    }
+  )
 
   if (use_cache) {
     cache_set(key, body)

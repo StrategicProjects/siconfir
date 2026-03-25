@@ -20,7 +20,7 @@ get_rreo(
 \item{nr_periodo}{Integer. Bimester number (1-6). \strong{Required}.}
 
 \item{co_tipo_demonstrativo}{Character. Report type: \code{"RREO"} or
-\code{"RREO Simplificado"}. \strong{Required}.}
+\code{"RREO Simplificado"}. \strong{Required}. Note: \code{"RREO Simplificado"} applies only to municipalities with fewer than 50,000 inhabitants that opted for simplified reporting.}
 
 \item{no_anexo}{Character. Appendix name (e.g., \code{"RREO-Anexo 01"}).
 \strong{Required}.}

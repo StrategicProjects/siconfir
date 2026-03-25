@@ -7,6 +7,11 @@ template:
     in_header: |
       <link rel="stylesheet" href="extra.css">
 
+cran:
+  icon: fab fa-r-project
+  href: https://cloud.r-project.org/package=pkgdown
+  aria-label: View on CRAN
+
 navbar:
   structure:
     left: [intro, reference, articles]

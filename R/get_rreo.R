@@ -9,7 +9,7 @@
 #' @param an_exercicio Integer. Fiscal year (e.g., `2022`). **Required**.
 #' @param nr_periodo Integer. Bimester number (1-6). **Required**.
 #' @param co_tipo_demonstrativo Character. Report type: `"RREO"` or
-#'   `"RREO Simplificado"`. **Required**.
+#'   `"RREO Simplificado"`. **Required**. Note: `"RREO Simplificado"` applies only to municipalities with fewer than 50,000 inhabitants that opted for simplified reporting.
 #' @param no_anexo Character. Appendix name (e.g., `"RREO-Anexo 01"`).
 #'   **Required**.
 #' @param co_esfera Character. Government sphere: `"M"` (municipalities),

@@ -31,7 +31,9 @@ get_rreo(
 - co_tipo_demonstrativo:
 
   Character. Report type: `"RREO"` or `"RREO Simplificado"`.
-  **Required**.
+  **Required**. Note: `"RREO Simplificado"` applies only to
+  municipalities with fewer than 50,000 inhabitants that opted for
+  simplified reporting.
 
 - no_anexo:
 

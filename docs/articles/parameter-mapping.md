@@ -6,9 +6,9 @@ The **siconfir** package wraps the SICONFI API from Brazil’s National
 Treasury. Because the API is natively in Portuguese, the package offers
 two parallel interfaces:
 
-- **English interface** – English function names *and* English parameter
+- **English interface**: English function names *and* English parameter
   names (e.g., `get_budget_report(fiscal_year = 2023)`)
-- **Portuguese interface** – names matching the original API query
+- **Portuguese interface**: names matching the original API query
   parameters (e.g., `get_rreo(an_exercicio = 2023)`)
 
 Both interfaces call the same underlying API endpoints and return
@@ -102,7 +102,7 @@ library(dplyr)
 
 # What appendices exist for the municipal RREO?
 get_annexes() |>
-  filter(esfera == "M", demonstrativo == "RREO")
+  filter(esfera == "M", str_detect(anexo, "RREO"))
 ```
 
 ------------------------------------------------------------------------
@@ -181,7 +181,7 @@ library(dplyr)
 
 # Which RREO periods did Pernambuco deliver in 2023?
 get_delivery_status(entity_id = 26, year = 2023) |>
-  filter(entregavel == "RREO") |>
+  filter(entregavel == "Relatório de Gestão Fiscal") |>
   select(periodo, status_relatorio, data_status)
 ```
 
@@ -240,7 +240,7 @@ rreo_simpl <- get_budget_report(
   report_type = "RREO Simplificado",
   appendix    = "RREO-Anexo 01",
   sphere      = "M",
-  entity_id   = 2611606
+  entity_id   = 2600104
 )
 ```
 
