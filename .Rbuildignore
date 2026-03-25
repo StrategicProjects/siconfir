@@ -2,9 +2,10 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
-^_pkgdown\.yml$
-^docs$
-^pkgdown$
 ^\.github$
-^codecov\.yml$
-^\.lintr$
+^docs$
+^_pkgdown\.yml$
+^pkgdown$
+^\.DS_Store$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
