@@ -99,7 +99,7 @@
 <li>
 <strong>Informative messages</strong>: Uses <a href="https://cli.r-lib.org" class="external-link">cli</a> for clear progress and error messages.</li>
 <li>
-<strong>Modern HTTP</strong>: Built on <a href="https://httr2.r-lib.org" class="external-link">httr2</a> with automatic retries.</li>
+<strong>Modern HTTP</strong>: Built on <a href="https://httr2.r-lib.org" class="external-link">httr2</a> with automatic retries and friendly error messages.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -219,7 +219,7 @@
 <p>The SICONFI API is provided by the Brazilian National Treasury at:</p>
 <pre><code>https://apidatalake.tesouro.gov.br/ords/siconfi/tt/</code></pre>
 <p>The API returns up to 5,000 rows per page. <strong>siconfir</strong> handles pagination automatically, following the <code>hasMore</code> / <code>offset</code> pattern until all data is retrieved.</p>
-<p><strong>Rate limit</strong>: The API allows one request per second. The package uses <code><a href="https://httr2.r-lib.org/reference/req_retry.html" class="external-link">httr2::req_retry()</a></code> to handle transient errors gracefully.</p>
+<p><strong>Rate limit</strong>: The API allows one request per second. The package automatically retries failed requests up to 3 times with progressive backoff and provides clear, informative error messages for connection issues.</p>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

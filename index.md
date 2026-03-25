@@ -29,7 +29,7 @@ pak::pak("StrategicProjects/siconfir")
 - **Informative messages**: Uses [cli](https://cli.r-lib.org) for clear
   progress and error messages.
 - **Modern HTTP**: Built on [httr2](https://httr2.r-lib.org) with
-  automatic retries.
+  automatic retries and friendly error messages.
 
 ## Available Functions
 
@@ -94,9 +94,10 @@ The API returns up to 5,000 rows per page. **siconfir** handles
 pagination automatically, following the `hasMore` / `offset` pattern
 until all data is retrieved.
 
-**Rate limit**: The API allows one request per second. The package uses
-[`httr2::req_retry()`](https://httr2.r-lib.org/reference/req_retry.html)
-to handle transient errors gracefully.
+**Rate limit**: The API allows one request per second. The package
+automatically retries failed requests up to 3 times with progressive
+backoff and provides clear, informative error messages for connection
+issues.
 
 ## License
 
