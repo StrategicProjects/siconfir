@@ -7,6 +7,7 @@ Authors@R: c(
     person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
     person("Carlos", "Amorin", email = "carlos.agaf@ufpe.br", role = "aut"),
     person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"),
+    person("Tiago", "Pereira", email = "tiago.pereira@tesouro.gov.br", role = "aut"),
     person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"))
 Description: Provides functions to access fiscal data from the Brazilian 
     National Treasury's SICONFI API 
