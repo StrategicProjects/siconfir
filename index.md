@@ -1,0 +1,103 @@
+# siconfir
+
+**siconfir** provides a tidy, modern interface to the [SICONFI
+API](https://apidatalake.tesouro.gov.br/docs/siconfi/) from Brazil’s
+National Treasury (Secretaria do Tesouro Nacional). It lets you access
+fiscal data from all Brazilian states and municipalities directly from
+R.
+
+[TABLE]
+
+## Installation
+
+``` r
+# Install from CRAN (when available)
+install.packages("siconfir")
+
+# Or install the development version from GitHub
+# install.packages("pak")
+pak::pak("StrategicProjects/siconfir")
+```
+
+## Features
+
+- **Tidyverse-friendly**: All functions return tibbles with snake_case
+  column names.
+- **Automatic pagination**: Fetches all pages of results transparently.
+- **In-memory caching**: Avoids redundant API calls within the same
+  session.
+- **Informative messages**: Uses [cli](https://cli.r-lib.org) for clear
+  progress and error messages.
+- **Modern HTTP**: Built on [httr2](https://httr2.r-lib.org) with
+  automatic retries.
+
+## Available Functions
+
+All functions return [tibbles](https://tibble.tidyverse.org/). English
+aliases with English parameter names are provided for all functions.
+
+| Function                                                                                                   | English Alias                                                                                            | Endpoint             | Description                                  |
+|------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|----------------------|----------------------------------------------|
+| [`get_anexos()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md)                     | [`get_annexes()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md)                  | `/anexos-relatorios` | Report appendix reference table              |
+| [`get_entes()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md)                       | [`get_entities()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md)                  | `/entes`             | Government entities (states, municipalities) |
+| [`get_dca()`](https://strategicprojects.github.io/siconfir/reference/get_dca.md)                           | [`get_annual_accounts()`](https://strategicprojects.github.io/siconfir/reference/get_annual_accounts.md) | `/dca`               | Annual Accounts Declaration (DCA)            |
+| [`get_extrato()`](https://strategicprojects.github.io/siconfir/reference/get_extrato.md)                   | [`get_delivery_status()`](https://strategicprojects.github.io/siconfir/reference/get_delivery_status.md) | `/extrato_entregas`  | Delivery status extract                      |
+| [`get_rreo()`](https://strategicprojects.github.io/siconfir/reference/get_rreo.md)                         | [`get_budget_report()`](https://strategicprojects.github.io/siconfir/reference/get_budget_report.md)     | `/rreo`              | Budget Execution Summary Report (RREO)       |
+| [`get_rgf()`](https://strategicprojects.github.io/siconfir/reference/get_rgf.md)                           | [`get_fiscal_report()`](https://strategicprojects.github.io/siconfir/reference/get_fiscal_report.md)     | `/rgf`               | Fiscal Management Report (RGF)               |
+| [`get_msc_controle()`](https://strategicprojects.github.io/siconfir/reference/get_msc_controle.md)         | [`get_msc_control()`](https://strategicprojects.github.io/siconfir/reference/get_msc_control.md)         | `/msc_controle`      | MSC control accounts (classes 7-8)           |
+| [`get_msc_orcamentaria()`](https://strategicprojects.github.io/siconfir/reference/get_msc_orcamentaria.md) | [`get_msc_budget()`](https://strategicprojects.github.io/siconfir/reference/get_msc_budget.md)           | `/msc_orcamentaria`  | MSC budgetary accounts (classes 5-6)         |
+| [`get_msc_patrimonial()`](https://strategicprojects.github.io/siconfir/reference/get_msc_patrimonial.md)   | [`get_msc_equity()`](https://strategicprojects.github.io/siconfir/reference/get_msc_equity.md)           | `/msc_patrimonial`   | MSC equity/asset accounts (classes 1-4)      |
+
+## Quick Start
+
+``` r
+library(siconfir)
+
+# List all entities
+entes <- get_entities()
+
+# Budget Execution Summary (RREO) -- English interface
+rreo <- get_budget_report(
+  fiscal_year = 2022, period = 6,
+  report_type = "RREO", appendix = "RREO-Anexo 01",
+  sphere = "E", entity_id = 17  # Tocantins
+)
+
+# Same call using the Portuguese interface:
+# rreo <- get_rreo(
+#   an_exercicio = 2022, nr_periodo = 6,
+#   co_tipo_demonstrativo = "RREO", no_anexo = "RREO-Anexo 01",
+#   co_esfera = "E", id_ente = 17
+# )
+
+# Fiscal Management Report (RGF) for Sao Paulo city
+rgf <- get_fiscal_report(
+  fiscal_year = 2022, periodicity = "Q", period = 3,
+  report_type = "RGF", appendix = "RGF-Anexo 01",
+  sphere = "M", branch = "E", entity_id = 3550308
+)
+
+# Annual accounts for Rondonia
+dca <- get_annual_accounts(fiscal_year = 2022, entity_id = 11)
+
+# Clear the cache if needed
+siconfir_clear_cache()
+```
+
+## API Reference
+
+The SICONFI API is provided by the Brazilian National Treasury at:
+
+    https://apidatalake.tesouro.gov.br/ords/siconfi/tt/
+
+The API returns up to 5,000 rows per page. **siconfir** handles
+pagination automatically, following the `hasMore` / `offset` pattern
+until all data is retrieved.
+
+**Rate limit**: The API allows one request per second. The package uses
+[`httr2::req_retry()`](https://httr2.r-lib.org/reference/req_retry.html)
+to handle transient errors gracefully.
+
+## License
+
+MIT
