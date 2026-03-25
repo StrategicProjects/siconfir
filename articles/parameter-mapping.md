@@ -1,0 +1,514 @@
+# Parameter Mapping Reference
+
+## Overview
+
+The **siconfir** package wraps the SICONFI API from Brazil’s National
+Treasury. Because the API is natively in Portuguese, the package offers
+two parallel interfaces:
+
+- **English interface** – English function names *and* English parameter
+  names (e.g., `get_budget_report(fiscal_year = 2023)`)
+- **Portuguese interface** – names matching the original API query
+  parameters (e.g., `get_rreo(an_exercicio = 2023)`)
+
+Both interfaces call the same underlying API endpoints and return
+identical tibbles. This vignette provides a complete reference of all
+parameter mappings, valid values, and side-by-side examples for every
+function.
+
+> **Note:** While function and parameter *names* are translated, the
+> parameter *values* and the *response column names* remain in
+> Portuguese because they come directly from the API (e.g.,
+> `appendix = "RREO-Anexo 01"`, response column `cod_ibge`).
+
+## Master parameter mapping table
+
+The table below lists every API query parameter, its English alias, and
+which functions use it.
+
+| API parameter           | English name    | Type      | Used in                        |
+|-------------------------|-----------------|-----------|--------------------------------|
+| `an_exercicio`          | `fiscal_year`   | Integer   | DCA, RREO, RGF                 |
+| `id_ente`               | `entity_id`     | Integer   | DCA, extrato, RREO, RGF, MSC\* |
+| `no_anexo`              | `appendix`      | Character | DCA, RREO, RGF                 |
+| `an_referencia`         | `year`          | Integer   | extrato, MSC\*                 |
+| `me_referencia`         | `month`         | Integer   | MSC\*                          |
+| `nr_periodo`            | `period`        | Integer   | RREO, RGF                      |
+| `co_tipo_demonstrativo` | `report_type`   | Character | RREO, RGF                      |
+| `co_esfera`             | `sphere`        | Character | RREO, RGF                      |
+| `co_poder`              | `branch`        | Character | RGF                            |
+| `in_periodicidade`      | `periodicity`   | Character | RGF                            |
+| `co_tipo_matriz`        | `matrix_type`   | Character | MSC\*                          |
+| `classe_conta`          | `account_class` | Integer   | MSC\*                          |
+| `id_tv`                 | `value_type`    | Character | MSC\*                          |
+
+\* MSC =
+[`get_msc_equity()`](https://strategicprojects.github.io/siconfir/reference/get_msc_equity.md)
+/
+[`get_msc_budget()`](https://strategicprojects.github.io/siconfir/reference/get_msc_budget.md)
+/
+[`get_msc_control()`](https://strategicprojects.github.io/siconfir/reference/get_msc_control.md)
+
+------------------------------------------------------------------------
+
+## Function-by-function reference
+
+### 1. Entities – `get_entities()` / `get_entes()`
+
+**Endpoint:** `/entes`
+
+No required parameters. Returns all registered government entities.
+
+``` r
+library(siconfir)
+
+# English
+entes <- get_entities()
+
+# Portuguese (equivalent)
+entes <- get_entes()
+```
+
+**Key response columns:** `cod_ibge`, `ente`, `capital`, `regiao`, `uf`,
+`esfera`, `populacao`, `co_cnpj`.
+
+------------------------------------------------------------------------
+
+### 2. Annexes – `get_annexes()` / `get_anexos()`
+
+**Endpoint:** `/anexos-relatorios`
+
+No required parameters. Returns the reference table of available report
+appendices.
+
+``` r
+# English
+anexos <- get_annexes()
+
+# Portuguese (equivalent)
+anexos <- get_anexos()
+```
+
+**Key response columns:** `esfera`, `demonstrativo`, `anexo`.
+
+Use this to discover valid `appendix` / `no_anexo` values for other
+functions:
+
+``` r
+library(dplyr)
+
+# What appendices exist for the municipal RREO?
+get_annexes() |>
+  filter(esfera == "M", demonstrativo == "RREO")
+```
+
+------------------------------------------------------------------------
+
+### 3. Annual accounts – `get_annual_accounts()` / `get_dca()`
+
+**Endpoint:** `/dca`
+
+| English param | Portuguese param | Required | Description                |
+|---------------|------------------|----------|----------------------------|
+| `fiscal_year` | `an_exercicio`   | Yes      | Fiscal year (e.g., `2023`) |
+| `entity_id`   | `id_ente`        | Yes      | IBGE code of the entity    |
+| `appendix`    | `no_anexo`       | No       | Filter by appendix name    |
+
+``` r
+# English
+dca <- get_annual_accounts(
+  fiscal_year = 2023,
+  entity_id   = 26  # Pernambuco
+)
+
+# Portuguese (equivalent)
+dca <- get_dca(
+  an_exercicio = 2023,
+  id_ente      = 26
+)
+
+# With optional appendix filter
+dca_ab <- get_annual_accounts(
+  fiscal_year = 2023,
+  entity_id   = 26,
+  appendix    = "DCA-Anexo I-AB"
+)
+```
+
+**Key response columns:** `exercicio`, `instituicao`, `cod_ibge`, `uf`,
+`anexo`, `rotulo`, `coluna`, `cod_conta`, `conta`, `valor`, `populacao`.
+
+------------------------------------------------------------------------
+
+### 4. Delivery status – `get_delivery_status()` / `get_extrato()`
+
+**Endpoint:** `/extrato_entregas`
+
+| English param | Portuguese param | Required | Description             |
+|---------------|------------------|----------|-------------------------|
+| `entity_id`   | `id_ente`        | Yes      | IBGE code of the entity |
+| `year`        | `an_referencia`  | Yes      | Reference year          |
+
+``` r
+# English
+status <- get_delivery_status(
+  entity_id = 26,
+  year      = 2023
+)
+
+# Portuguese (equivalent)
+status <- get_extrato(
+  id_ente       = 26,
+  an_referencia = 2023
+)
+```
+
+**Key response columns:** `exercicio`, `cod_ibge`, `instituicao`,
+`entregavel`, `periodo`, `periodicidade`, `status_relatorio`,
+`data_status`, `forma_envio`, `tipo_relatorio`.
+
+Useful for checking which reports have been submitted before querying
+them:
+
+``` r
+library(dplyr)
+
+# Which RREO periods did Pernambuco deliver in 2023?
+get_delivery_status(entity_id = 26, year = 2023) |>
+  filter(entregavel == "RREO") |>
+  select(periodo, status_relatorio, data_status)
+```
+
+------------------------------------------------------------------------
+
+### 5. Budget Execution Summary Report – `get_budget_report()` / `get_rreo()`
+
+**Endpoint:** `/rreo`
+
+| English param | Portuguese param        | Required | Description                       |
+|---------------|-------------------------|----------|-----------------------------------|
+| `fiscal_year` | `an_exercicio`          | Yes      | Fiscal year                       |
+| `period`      | `nr_periodo`            | Yes      | Bimester (1–6)                    |
+| `report_type` | `co_tipo_demonstrativo` | Yes      | `"RREO"` or `"RREO Simplificado"` |
+| `appendix`    | `no_anexo`              | Yes      | Appendix name                     |
+| `sphere`      | `co_esfera`             | Yes      | `"M"`, `"E"`, or `"U"`            |
+| `entity_id`   | `id_ente`               | Yes      | IBGE code                         |
+
+**Valid values for `report_type`:**
+
+- `"RREO"` – standard report (all entities)
+- `"RREO Simplificado"` – simplified report (municipalities under 50k)
+
+**Valid values for `sphere`:**
+
+- `"M"` – municipalities
+- `"E"` – states (including Federal District)
+- `"U"` – federal government (union)
+
+``` r
+# English -- 6th bimester for Pernambuco
+rreo <- get_budget_report(
+  fiscal_year = 2023,
+  period      = 6,
+  report_type = "RREO",
+  appendix    = "RREO-Anexo 01",
+  sphere      = "E",
+  entity_id   = 26
+)
+
+# Portuguese (equivalent)
+rreo <- get_rreo(
+  an_exercicio          = 2023,
+  nr_periodo            = 6,
+  co_tipo_demonstrativo = "RREO",
+  no_anexo              = "RREO-Anexo 01",
+  co_esfera             = "E",
+  id_ente               = 26
+)
+
+# Simplified RREO for a small municipality (Recife = 2611606)
+rreo_simpl <- get_budget_report(
+  fiscal_year = 2023,
+  period      = 6,
+  report_type = "RREO Simplificado",
+  appendix    = "RREO-Anexo 01",
+  sphere      = "M",
+  entity_id   = 2611606
+)
+```
+
+**Key response columns:** `exercicio`, `demonstrativo`, `periodo`,
+`instituicao`, `cod_ibge`, `uf`, `populacao`, `anexo`, `coluna`,
+`cod_conta`, `conta`, `valor`.
+
+------------------------------------------------------------------------
+
+### 6. Fiscal Management Report – `get_fiscal_report()` / `get_rgf()`
+
+**Endpoint:** `/rgf`
+
+| English param | Portuguese param        | Required | Description                                 |
+|---------------|-------------------------|----------|---------------------------------------------|
+| `fiscal_year` | `an_exercicio`          | Yes      | Fiscal year                                 |
+| `periodicity` | `in_periodicidade`      | Yes      | `"Q"` (four-monthly) or `"S"` (semi-annual) |
+| `period`      | `nr_periodo`            | Yes      | Period (1–3 for Q, 1–2 for S)               |
+| `report_type` | `co_tipo_demonstrativo` | Yes      | `"RGF"` or `"RGF Simplificado"`             |
+| `appendix`    | `no_anexo`              | Yes      | Appendix name                               |
+| `sphere`      | `co_esfera`             | Yes      | `"M"`, `"E"`, or `"U"`                      |
+| `branch`      | `co_poder`              | Yes      | Government branch code                      |
+| `entity_id`   | `id_ente`               | Yes      | IBGE code                                   |
+
+**Valid values for `branch` / `co_poder`:**
+
+- `"E"` – Executive
+- `"L"` – Legislative
+- `"J"` – Judiciary
+- `"M"` – Public Ministry
+- `"D"` – Public Defender
+
+**Valid values for `periodicity` / `in_periodicidade`:**
+
+- `"Q"` – four-monthly (standard, 3 periods per year)
+- `"S"` – semi-annual (simplified RGF only, 2 periods per year)
+
+``` r
+# English -- 3rd four-month period, executive branch, state level
+rgf <- get_fiscal_report(
+  fiscal_year = 2023,
+  periodicity = "Q",
+  period      = 3,
+  report_type = "RGF",
+  appendix    = "RGF-Anexo 01",
+  sphere      = "E",
+  branch      = "E",
+  entity_id   = 26
+)
+
+# Portuguese (equivalent)
+rgf <- get_rgf(
+  an_exercicio          = 2023,
+  in_periodicidade      = "Q",
+  nr_periodo            = 3,
+  co_tipo_demonstrativo = "RGF",
+  no_anexo              = "RGF-Anexo 01",
+  co_esfera             = "E",
+  co_poder              = "E",
+  id_ente               = 26
+)
+
+# Legislative branch
+rgf_leg <- get_fiscal_report(
+  fiscal_year = 2023,
+  periodicity = "Q",
+  period      = 3,
+  report_type = "RGF",
+  appendix    = "RGF-Anexo 01",
+  sphere      = "E",
+  branch      = "L",
+  entity_id   = 26
+)
+```
+
+**Key response columns:** `exercicio`, `periodo`, `periodicidade`,
+`instituicao`, `cod_ibge`, `uf`, `co_poder`, `populacao`, `anexo`,
+`coluna`, `cod_conta`, `conta`, `valor`.
+
+------------------------------------------------------------------------
+
+### 7. MSC equity/asset accounts – `get_msc_equity()` / `get_msc_patrimonial()`
+
+**Endpoint:** `/msc_patrimonial`
+
+| English param   | Portuguese param | Required | Description              |
+|-----------------|------------------|----------|--------------------------|
+| `entity_id`     | `id_ente`        | Yes      | IBGE code                |
+| `year`          | `an_referencia`  | Yes      | Reference year           |
+| `month`         | `me_referencia`  | Yes      | Reference month (1–12)   |
+| `matrix_type`   | `co_tipo_matriz` | Yes      | `"MSCC"` or `"MSCE"`     |
+| `account_class` | `classe_conta`   | Yes      | `1`, `2`, `3`, or `4`    |
+| `value_type`    | `id_tv`          | Yes      | Balance type (see below) |
+
+**Valid values for `matrix_type` / `co_tipo_matriz`:**
+
+- `"MSCC"` – monthly aggregate matrix
+- `"MSCE"` – annual closing matrix
+
+**Valid values for `value_type` / `id_tv`:**
+
+- `"beginning_balance"` – opening balance for the period
+- `"ending_balance"` – closing balance for the period
+- `"period_change"` – net movement during the period
+
+**Valid values for `account_class` / `classe_conta`:**
+
+- `1` – Assets (Ativo)
+- `2` – Liabilities (Passivo)
+- `3` – Net equity variations – additions (VPA)
+- `4` – Net equity variations – deductions (VPD)
+
+``` r
+# English -- assets at year-end
+msc_assets <- get_msc_equity(
+  entity_id     = 26,
+  year          = 2023,
+  month         = 12,
+  matrix_type   = "MSCC",
+  account_class = 1,
+  value_type    = "ending_balance"
+)
+
+# Portuguese (equivalent)
+msc_assets <- get_msc_patrimonial(
+  id_ente        = 26,
+  an_referencia  = 2023,
+  me_referencia  = 12,
+  co_tipo_matriz = "MSCC",
+  classe_conta   = 1,
+  id_tv          = "ending_balance"
+)
+
+# Liabilities movement during June
+msc_liab <- get_msc_equity(
+  entity_id     = 26,
+  year          = 2023,
+  month         = 6,
+  matrix_type   = "MSCC",
+  account_class = 2,
+  value_type    = "period_change"
+)
+```
+
+**Key response columns:** `tipo_matriz`, `cod_ibge`, `classe_conta`,
+`conta_contabil`, `poder_orgao`, `fonte_recursos`, `exercicio`,
+`mes_referencia`, `valor`, `natureza_conta`, `tipo_valor`.
+
+------------------------------------------------------------------------
+
+### 8. MSC budgetary accounts – `get_msc_budget()` / `get_msc_orcamentaria()`
+
+**Endpoint:** `/msc_orcamentaria`
+
+Same parameters as MSC equity, except:
+
+| English param   | Portuguese param | Required | Valid values |
+|-----------------|------------------|----------|--------------|
+| `account_class` | `classe_conta`   | Yes      | `5` or `6`   |
+
+**Account classes:**
+
+- `5` – Budgetary planning and control - approved (Controle da
+  aprovacao)
+- `6` – Budgetary execution (Execucao do orcamento)
+
+``` r
+# English -- budgetary execution at year-end
+msc_exec <- get_msc_budget(
+  entity_id     = 26,
+  year          = 2023,
+  month         = 12,
+  matrix_type   = "MSCC",
+  account_class = 6,
+  value_type    = "period_change"
+)
+
+# Portuguese (equivalent)
+msc_exec <- get_msc_orcamentaria(
+  id_ente        = 26,
+  an_referencia  = 2023,
+  me_referencia  = 12,
+  co_tipo_matriz = "MSCC",
+  classe_conta   = 6,
+  id_tv          = "period_change"
+)
+```
+
+**Key response columns:** Same as MSC equity, plus `natureza_despesa`,
+`natureza_receita`, `funcao`, `subfuncao`.
+
+------------------------------------------------------------------------
+
+### 9. MSC control accounts – `get_msc_control()` / `get_msc_controle()`
+
+**Endpoint:** `/msc_controle`
+
+Same parameters as MSC equity, except:
+
+| English param   | Portuguese param | Required | Valid values |
+|-----------------|------------------|----------|--------------|
+| `account_class` | `classe_conta`   | Yes      | `7` or `8`   |
+
+**Account classes:**
+
+- `7` – Off-balance-sheet controls - debit (Controles devedores)
+- `8` – Off-balance-sheet controls - credit (Controles credores)
+
+``` r
+# English -- control accounts at year-end
+msc_ctrl <- get_msc_control(
+  entity_id     = 26,
+  year          = 2023,
+  month         = 12,
+  matrix_type   = "MSCC",
+  account_class = 8,
+  value_type    = "ending_balance"
+)
+
+# Portuguese (equivalent)
+msc_ctrl <- get_msc_controle(
+  id_ente        = 26,
+  an_referencia  = 2023,
+  me_referencia  = 12,
+  co_tipo_matriz = "MSCC",
+  classe_conta   = 8,
+  id_tv          = "ending_balance"
+)
+```
+
+**Key response columns:** Same as MSC equity, plus `natureza_despesa`,
+`funcao`, `subfuncao`.
+
+------------------------------------------------------------------------
+
+## Quick reference: common IBGE codes
+
+Some frequently used IBGE codes for `entity_id` / `id_ente`:
+
+| Entity                 | IBGE code | Sphere |
+|------------------------|-----------|--------|
+| Federal Government     | `1`       | `"U"`  |
+| Sao Paulo (state)      | `35`      | `"E"`  |
+| Minas Gerais (state)   | `31`      | `"E"`  |
+| Rio de Janeiro (state) | `33`      | `"E"`  |
+| Pernambuco (state)     | `26`      | `"E"`  |
+| Sao Paulo (city)       | `3550308` | `"M"`  |
+| Rio de Janeiro (city)  | `3304557` | `"M"`  |
+| Recife (city)          | `2611606` | `"M"`  |
+| Belo Horizonte (city)  | `3106200` | `"M"`  |
+
+Use
+[`get_entities()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md)
+to look up any entity’s IBGE code:
+
+``` r
+library(dplyr)
+
+get_entities() |>
+  filter(uf == "PE", capital == 1) |>
+  select(cod_ibge, ente, populacao)
+```
+
+------------------------------------------------------------------------
+
+## Tips
+
+- Use
+  [`get_annexes()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md)
+  to discover valid `appendix` values before calling report functions.
+- Use
+  [`get_delivery_status()`](https://strategicprojects.github.io/siconfir/reference/get_delivery_status.md)
+  to verify that a report has been submitted before querying it.
+- All functions accept `use_cache = FALSE` to bypass the in-memory
+  cache.
+- Call
+  [`siconfir_clear_cache()`](https://strategicprojects.github.io/siconfir/reference/siconfir_clear_cache.md)
+  to reset cached data during a session.
