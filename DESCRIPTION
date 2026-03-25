@@ -1,0 +1,37 @@
+Package: siconfir
+Title: Access Brazilian Fiscal Data from SICONFI API
+Version: 0.1.0
+Authors@R: c(
+    person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
+    person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
+    person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
+    person("Carlos", "Amorin", email = "carlos.agaf@ufpe.br", role = "aut"),
+    person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"),
+    person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"))
+Description: Provides functions to access fiscal data from the Brazilian 
+    National Treasury's SICONFI API 
+    <https://apidatalake.tesouro.gov.br/docs/siconfi/>. Includes budget 
+    execution reports (RREO), fiscal management reports (RGF), annual 
+    accounts declarations (DCA), accounting balances matrices (MSC), and 
+    entity information for all Brazilian states and municipalities. Features 
+    automatic pagination, in-memory caching, and tidy output.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    cli (>= 3.6.0),
+    dplyr (>= 1.1.0),
+    httr2 (>= 1.0.0),
+    stringr (>= 1.5.0),
+    tibble (>= 3.2.0)
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+URL: https://github.com/StrategicProjects/siconfir,
+    https://strategicprojects.github.io/siconfir/
+BugReports: https://github.com/StrategicProjects/siconfir/issues

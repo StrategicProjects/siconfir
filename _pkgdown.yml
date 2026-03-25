@@ -1,0 +1,68 @@
+url: https://strategicprojects.github.io/siconfir/
+
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  includes:
+    in_header: |
+      <link rel="stylesheet" href="extra.css">
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/StrategicProjects/siconfir
+    articles:
+      text: Articles
+      menu:
+        - text: "Getting started"
+          href: articles/getting-started.html
+        - text: "---"
+        - text: "All articles"
+          href: articles/index.html
+
+
+reference:
+  - title: "English interface"
+    desc: >
+      Fully English functions with English parameter names.
+      These are the recommended entry points for most users.
+    contents:
+      - get_entities
+      - get_annexes
+      - get_annual_accounts
+      - get_delivery_status
+      - get_budget_report
+      - get_fiscal_report
+      - get_msc_equity
+      - get_msc_budget
+      - get_msc_control
+
+  - title: "Portuguese interface (API-native)"
+    desc: >
+      Functions with Portuguese names matching the original API parameter names.
+      Use these if you prefer to work directly with the API naming convention.
+    contents:
+      - get_anexos
+      - get_entes
+      - get_dca
+      - get_extrato
+      - get_rreo
+      - get_rgf
+      - get_msc_patrimonial
+      - get_msc_orcamentaria
+      - get_msc_controle
+
+  - title: "Utilities"
+    desc: "Helper functions"
+    contents:
+      - siconfir_clear_cache
+
+articles:
+  - title: "Getting started"
+    contents:
+      - getting-started
+      - getting-started
