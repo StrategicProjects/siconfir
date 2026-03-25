@@ -31,7 +31,9 @@ get_budget_report(
 - report_type:
 
   Character. `"RREO"` or `"RREO Simplificado"`. Maps to
-  `co_tipo_demonstrativo`.
+  `co_tipo_demonstrativo`. Note: `"RREO Simplificado"` applies only to
+  municipalities with fewer than 50,000 inhabitants that opted for
+  simplified reporting.
 
 - appendix:
 
