@@ -17,5 +17,5 @@
 * All functions return tibbles.
 * Automatic pagination to fetch all pages of results.
 * In-memory session cache with `siconfir_clear_cache()`.
-* Built on `{httr2}` with automatic retries.
+* Built on `{httr2}` with automatic retries and informative error messages.
 * Informative CLI messages via `{cli}`.

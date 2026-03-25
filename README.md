@@ -46,7 +46,7 @@ pak::pak("StrategicProjects/siconfir")
 - **Automatic pagination**: Fetches all pages of results transparently.
 - **In-memory caching**: Avoids redundant API calls within the same session.
 - **Informative messages**: Uses `{cli}` for clear progress and error messages.
-- **Modern HTTP**: Built on `{httr2}` with automatic retries.
+- **Modern HTTP**: Built on `{httr2}` with automatic retries and friendly error messages.
 
 ## Available Functions
 
@@ -111,7 +111,7 @@ https://apidatalake.tesouro.gov.br/ords/siconfi/tt/
 
 The API returns up to 5,000 rows per page. **siconfir** handles pagination automatically, following the `hasMore` / `offset` pattern until all data is retrieved.
 
-**Rate limit**: The API allows one request per second. The package uses `httr2::req_retry()` to handle transient errors gracefully.
+**Rate limit**: The API allows one request per second. The package automatically retries failed requests up to 3 times with progressive backoff and provides clear, informative error messages for connection issues.
 
 ## License
 MIT

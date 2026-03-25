@@ -44,5 +44,6 @@
 - Automatic pagination to fetch all pages of results.
 - In-memory session cache with
   [`siconfir_clear_cache()`](https://strategicprojects.github.io/siconfir/reference/siconfir_clear_cache.md).
-- Built on [httr2](https://httr2.r-lib.org) with automatic retries.
+- Built on [httr2](https://httr2.r-lib.org) with automatic retries and
+  informative error messages.
 - Informative CLI messages via [cli](https://cli.r-lib.org).
