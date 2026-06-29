@@ -11,6 +11,7 @@ R.
 ## Installation
 
 ``` r
+
 # Install from CRAN (when available)
 install.packages("siconfir")
 
@@ -36,21 +37,22 @@ pak::pak("StrategicProjects/siconfir")
 All functions return [tibbles](https://tibble.tidyverse.org/). English
 aliases with English parameter names are provided for all functions.
 
-| Function                                                                                                   | English Alias                                                                                            | Endpoint             | Description                                  |
-|------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|----------------------|----------------------------------------------|
-| [`get_anexos()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md)                     | [`get_annexes()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md)                  | `/anexos-relatorios` | Report appendix reference table              |
-| [`get_entes()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md)                       | [`get_entities()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md)                  | `/entes`             | Government entities (states, municipalities) |
-| [`get_dca()`](https://strategicprojects.github.io/siconfir/reference/get_dca.md)                           | [`get_annual_accounts()`](https://strategicprojects.github.io/siconfir/reference/get_annual_accounts.md) | `/dca`               | Annual Accounts Declaration (DCA)            |
-| [`get_extrato()`](https://strategicprojects.github.io/siconfir/reference/get_extrato.md)                   | [`get_delivery_status()`](https://strategicprojects.github.io/siconfir/reference/get_delivery_status.md) | `/extrato_entregas`  | Delivery status extract                      |
-| [`get_rreo()`](https://strategicprojects.github.io/siconfir/reference/get_rreo.md)                         | [`get_budget_report()`](https://strategicprojects.github.io/siconfir/reference/get_budget_report.md)     | `/rreo`              | Budget Execution Summary Report (RREO)       |
-| [`get_rgf()`](https://strategicprojects.github.io/siconfir/reference/get_rgf.md)                           | [`get_fiscal_report()`](https://strategicprojects.github.io/siconfir/reference/get_fiscal_report.md)     | `/rgf`               | Fiscal Management Report (RGF)               |
-| [`get_msc_controle()`](https://strategicprojects.github.io/siconfir/reference/get_msc_controle.md)         | [`get_msc_control()`](https://strategicprojects.github.io/siconfir/reference/get_msc_control.md)         | `/msc_controle`      | MSC control accounts (classes 7-8)           |
-| [`get_msc_orcamentaria()`](https://strategicprojects.github.io/siconfir/reference/get_msc_orcamentaria.md) | [`get_msc_budget()`](https://strategicprojects.github.io/siconfir/reference/get_msc_budget.md)           | `/msc_orcamentaria`  | MSC budgetary accounts (classes 5-6)         |
-| [`get_msc_patrimonial()`](https://strategicprojects.github.io/siconfir/reference/get_msc_patrimonial.md)   | [`get_msc_equity()`](https://strategicprojects.github.io/siconfir/reference/get_msc_equity.md)           | `/msc_patrimonial`   | MSC equity/asset accounts (classes 1-4)      |
+| Function | English Alias | Endpoint | Description |
+|----|----|----|----|
+| [`get_anexos()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md) | [`get_annexes()`](https://strategicprojects.github.io/siconfir/reference/get_anexos.md) | `/anexos-relatorios` | Report appendix reference table |
+| [`get_entes()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md) | [`get_entities()`](https://strategicprojects.github.io/siconfir/reference/get_entes.md) | `/entes` | Government entities (states, municipalities) |
+| [`get_dca()`](https://strategicprojects.github.io/siconfir/reference/get_dca.md) | [`get_annual_accounts()`](https://strategicprojects.github.io/siconfir/reference/get_annual_accounts.md) | `/dca` | Annual Accounts Declaration (DCA) |
+| [`get_extrato()`](https://strategicprojects.github.io/siconfir/reference/get_extrato.md) | [`get_delivery_status()`](https://strategicprojects.github.io/siconfir/reference/get_delivery_status.md) | `/extrato_entregas` | Delivery status extract |
+| [`get_rreo()`](https://strategicprojects.github.io/siconfir/reference/get_rreo.md) | [`get_budget_report()`](https://strategicprojects.github.io/siconfir/reference/get_budget_report.md) | `/rreo` | Budget Execution Summary Report (RREO) |
+| [`get_rgf()`](https://strategicprojects.github.io/siconfir/reference/get_rgf.md) | [`get_fiscal_report()`](https://strategicprojects.github.io/siconfir/reference/get_fiscal_report.md) | `/rgf` | Fiscal Management Report (RGF) |
+| [`get_msc_controle()`](https://strategicprojects.github.io/siconfir/reference/get_msc_controle.md) | [`get_msc_control()`](https://strategicprojects.github.io/siconfir/reference/get_msc_control.md) | `/msc_controle` | MSC control accounts (classes 7-8) |
+| [`get_msc_orcamentaria()`](https://strategicprojects.github.io/siconfir/reference/get_msc_orcamentaria.md) | [`get_msc_budget()`](https://strategicprojects.github.io/siconfir/reference/get_msc_budget.md) | `/msc_orcamentaria` | MSC budgetary accounts (classes 5-6) |
+| [`get_msc_patrimonial()`](https://strategicprojects.github.io/siconfir/reference/get_msc_patrimonial.md) | [`get_msc_equity()`](https://strategicprojects.github.io/siconfir/reference/get_msc_equity.md) | `/msc_patrimonial` | MSC equity/asset accounts (classes 1-4) |
 
 ## Quick Start
 
 ``` r
+
 library(siconfir)
 
 # List all entities
