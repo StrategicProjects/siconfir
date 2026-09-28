@@ -3,12 +3,15 @@ Title: Access Brazilian Fiscal Data from SICONFI API
 Version: 0.1.0
 Authors@R: c(
     person("Andre", "Leite", email = "leite@castlab.org", role = c("aut", "cre")),
-    person("Marcos", "Wasilew", email = "marcos.wasilew@gmail.com", role = "aut"),
+    person("Marcos", "Wasiliew", email = "marcos.wasiliew@gmail.com", role = "aut",
+           comment = c(ORCID = "0009-0004-4694-3159")),
     person("Hugo", "Vasconcelos", email = "hugo.vasconcelos@ufpe.br", role = "aut"),
     person("Carlos", "Amorim", email = "carlos.agaf@ufpe.br", role = "aut"),
     person("Diogo", "Bezerra", email = "diogo.bezerra@ufpe.br", role = "aut"),
     person("Tiago", "Pereira", email = "tiago.pereira@tesouro.gov.br", role = "aut"),
-    person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"))
+    person("Fernando", "Barbalho", email = "fbarbalho@gmail.com", role = "aut"),
+    person("Júlia", "Nascimento Barreto", email = "juliabarreto@gd.seplag.pe.gov.br", role = "aut",
+           comment = c(ORCID = "0009-0004-2851-7770")))
 Description: Provides functions to access fiscal data from the Brazilian 
     National Treasury's SICONFI API 
     <https://apidatalake.tesouro.gov.br/docs/siconfi/>. Includes budget 
@@ -19,7 +22,6 @@ Description: Provides functions to access fiscal data from the Brazilian
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: 
     cli (>= 3.6.0),
     dplyr (>= 1.1.0),
@@ -36,3 +38,4 @@ VignetteBuilder: knitr
 URL: https://github.com/StrategicProjects/siconfir,
     https://strategicprojects.github.io/siconfir/
 BugReports: https://github.com/StrategicProjects/siconfir/issues
+Config/roxygen2/version: 8.0.0

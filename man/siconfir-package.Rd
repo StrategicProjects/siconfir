@@ -6,6 +6,8 @@
 \alias{siconfir-package}
 \title{siconfir: Access Brazilian Fiscal Data from SICONFI API}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 Provides functions to access fiscal data from the Brazilian National Treasury's SICONFI API \url{https://apidatalake.tesouro.gov.br/docs/siconfi/}. Includes budget execution reports (RREO), fiscal management reports (RGF), annual accounts declarations (DCA), accounting balances matrices (MSC), and entity information for all Brazilian states and municipalities. Features automatic pagination, in-memory caching, and tidy output.
 }
 \seealso{
@@ -22,12 +24,14 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Marcos Wasilew \email{marcos.wasilew@gmail.com}
+  \item Andre Leite \email{leite@castlab.org}
+  \item Marcos Wasiliew \email{marcos.wasiliew@gmail.com} (\href{https://orcid.org/0009-0004-4694-3159}{ORCID})
   \item Hugo Vasconcelos \email{hugo.vasconcelos@ufpe.br}
   \item Carlos Amorim \email{carlos.agaf@ufpe.br}
   \item Diogo Bezerra \email{diogo.bezerra@ufpe.br}
   \item Tiago Pereira \email{tiago.pereira@tesouro.gov.br}
   \item Fernando Barbalho \email{fbarbalho@gmail.com}
+  \item Júlia Nascimento Barreto \email{juliabarreto@gd.seplag.pe.gov.br} (\href{https://orcid.org/0009-0004-2851-7770}{ORCID})
 }
 
 }
