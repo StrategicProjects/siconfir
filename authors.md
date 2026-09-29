@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **Andre Leite**. Author, maintainer.
+- **André Leite**. Author, maintainer.
 
 - **Marcos Wasiliew**. Author. [](https://orcid.org/0009-0004-4694-3159)
 
@@ -31,7 +31,7 @@ Fiscal Data from SICONFI API*. R package version 0.1.0,
 
     @Manual{,
       title = {siconfir: Access Brazilian Fiscal Data from SICONFI API},
-      author = {Andre Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra and Tiago Pereira and Fernando Barbalho and Júlia {Nascimento Barreto}},
+      author = {André Leite and Marcos Wasiliew and Hugo Vasconcelos and Carlos Amorim and Diogo Bezerra and Tiago Pereira and Fernando Barbalho and Júlia {Nascimento Barreto}},
       year = {2026},
       note = {R package version 0.1.0},
       url = {https://github.com/StrategicProjects/siconfir},
